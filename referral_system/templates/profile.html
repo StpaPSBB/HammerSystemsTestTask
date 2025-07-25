@@ -1,0 +1,37 @@
+{% block content %}
+<h2>Your profile</h2>
+<p>Phone number: {{ user.phone_number }}</p>
+<p>Your invite-code: <strong>{{ user.self_invite_code }}</strong></p>
+
+{% if not user.activated_invite_code %}
+<form method="post" action="{% url 'profile' %}">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="invite_code">Activate invite-code:</label>
+        <input type="text" 
+               id="invite_code" 
+               name="invite_code" 
+               maxlength="6"
+               required
+               class="form-control">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Activate</button>
+</form>
+{% else %}
+<p>You activated code: {{ user.activated_invite_code }}</p>
+{% endif %}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+
+<h3>Your referrals:</h3>
+<ul>
+    {% for referral in referrals %}
+    <li>{{ referral.phone_number }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+env/
+.venv
+
+# Django stuff
+*.log
+local_settings.py
+db.sqlite3
+media/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# Env file (DON'T COMMIT THIS!)
+.env
+
+# Docker override (optional)
+docker-compose.override.yml

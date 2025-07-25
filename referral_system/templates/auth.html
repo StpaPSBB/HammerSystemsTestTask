@@ -1,0 +1,23 @@
+{% block content %}
+<h2>Phone Authorization</h2>
+<form method="post" action="{% url 'auth' %}">
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="phone_number">Enter phone number:</label>
+        <input type="tel" name="phone_number" required class="form-control">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Send Code</button>
+</form>
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    {{ error }}
+</div>
+{% endif %}
+{% if message %}
+<div class="alert alert-success" role="alert">
+    {{ message }}
+</div>
+{% endif %}
+{% endblock %}
