@@ -62,6 +62,13 @@
 #### Активировать инвайт-код  
 **Запрос:**  
 `POST /api/profile/`  
+**Заголовки запроса:**
+
+Обязательно нужно в Headers добавить:
+```
+    X-CSRFToken: abc123...  # Значение из куки csrftoken 
+```
+
 **Тело запроса (JSON):**  
 ```json
 {
@@ -79,6 +86,40 @@
 - `400` – нельзя активировать свой код или уже есть активный.  
 - `404` – код не существует.  
 
+### 4. Выход из системы (Logout)  
+
+**Запрос:**  
+`POST /api/logout/`  
+
+**Заголовки запроса:**  
+Обязательно нужно в Headers добавить:  
+```
+X-CSRFToken: abc123...  # Значение из куки csrftoken  
+```  
+
+**Ответ (успех):**  
+```json
+{
+    "status": "success",
+    "message": "Successfully logged out"
+}
+```  
+
+**Ошибки:**  
+- `403` – CSRF-токен неверный или отсутствует.  
+
+---  
+
+### Как получить CSRF-токен для Logout и `POST /api/profile`:  
+1. После успешной авторизации (через `/api/verify/`), сервер устанавливает:  
+   - Куки `csrftoken` (CSRF-токен)  
+   - Куки `sessionid` (идентификатор сессии)  
+
+2. Для выполнения Logout и `POST /api/profile`:  
+   - Извлеките значение `csrftoken` из куков  
+   - Добавьте его в заголовок `X-CSRFToken`  
+   - Убедитесь, что куки `sessionid` передаются с запросом  
+
 ---  
 
 ## Как запустить  
@@ -89,10 +130,11 @@
     POSTGRES_DB=<Имя базы данных>
     POSTGRES_USER=<Имя пользователя>
     POSTGRES_PASSWORD=<Пароль пользователя> 
+    POSTGRES_PORT=<Внешний порт для вашей бд>
 
     # Django настройки
     SECRET_KEY=<ваш-секретный-ключ>
-    DEBUG=True
+    DEBUG=True/False
     ALLOWED_HOSTS=*
 
     # DB настройки в Django
@@ -103,20 +145,34 @@
     DB_HOST=db
     DB_PORT=<Порт базы данных>
    ```
+Пример .env файла:
+   ```bash
+    POSTGRES_DB=referral_system
+    POSTGRES_USER=admin
+    POSTGRES_PASSWORD=1521
+    POSTGRES_PORT=5432
+
+    SECRET_KEY='=r5g7e()tez3hw%kycl9@0u$)e@auf%1^$#962&ftm1-_kmf5m'
+    DEBUG=True
+    ALLOWED_HOSTS=*
+
+    DB_ENGINE=django.db.backends.postgresql
+    DB_NAME=referral_system
+    DB_USER=admin
+    DB_PASSWORD=1521
+    DB_HOST=db
+    DB_PORT=5432
+   ```
 *(Убедитесь, что значения `POSTGRES_*` совпадают с `DB_*` для корректной работы).*
 
 3.  Убедитесь, что файлы `Dockerfile` и `docker-compose.yml` находятся в корневой директории проекта и содержат исправленные настройки томов и сервисов, как показано выше.
 4.  Запустите проект с помощью Docker Compose:
     ```bash
-    docker-compose up -d
+    docker-compose up --build
     ```
     Эта команда соберет образы, создаст и запустит контейнеры в фоновом режиме. Миграции будут применены автоматически.
 5.  Приложение будет доступно по адресу `http://localhost:8000`.
-6.  Для остановки и удаления контейнеров используйте:
+6.  Для остановки контейнера используйте:
     ```bash
     docker-compose down
-    ```
-    Для остановки и удаления контейнеров **вместе с данными БД** (осторожно!):
-    ```bash
-    docker-compose down -v
     ```

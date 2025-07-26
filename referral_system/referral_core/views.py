@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.renderers import TemplateHTMLRenderer, JSONRenderer
 from django.shortcuts import render, redirect
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
 from django.contrib.sessions.backends.db import SessionStore
 from django.core.validators import RegexValidator
 import random
@@ -85,7 +85,7 @@ class VerifyView(APIView):
 
 class ProfileView(APIView):
     """
-    Lists referrals and shows profile.
+    Lists referrals, shows profile and activates code.
     """
     permission_classes=[IsAuthenticated]
     renderer_classes=[JSONRenderer, TemplateHTMLRenderer]
@@ -143,5 +143,22 @@ class ProfileView(APIView):
                 "status": "Code successfully activated",
                 "activated_invite_code": new_code
             },
+            status=status.HTTP_200_OK
+        )
+    
+class LogoutAPIView(APIView):
+    """
+    Logs out the currently authenticated user and clears the session.
+    """
+    permission_classes = [IsAuthenticated]
+    renderer_classes=[JSONRenderer, TemplateHTMLRenderer]
+    template_name='logout.html'
+
+    def post(self, request):
+
+        logout(request)
+
+        return Response(
+            {"message": "You have been successfully logged out."},
             status=status.HTTP_200_OK
         )

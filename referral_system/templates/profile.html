@@ -34,4 +34,8 @@
     <li>{{ referral.phone_number }}</li>
     {% endfor %}
 </ul>
+<form method="post" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">logout</button>
+</form>
 {% endblock %}

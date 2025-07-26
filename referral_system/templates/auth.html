@@ -18,6 +18,7 @@
 {% if message %}
 <div class="alert alert-success" role="alert">
     {{ message }}
+    <a href={% url 'verify' %}>Go to verification</a>
 </div>
 {% endif %}
 {% endblock %}

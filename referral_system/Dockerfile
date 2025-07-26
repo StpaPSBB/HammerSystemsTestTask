@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 ENV PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=to_do_list.settings
+    DJANGO_SETTINGS_MODULE=referral_system.settings
 
 EXPOSE 8000
 

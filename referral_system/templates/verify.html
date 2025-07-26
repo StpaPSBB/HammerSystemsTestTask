@@ -21,6 +21,7 @@
 {% if message %}
 <div class="alert alert-success" role="alert">
     {{ message }}
+    <a href={% url 'profile' %}>Go to profile</a>
 </div>
 {% endif %}
 {% endblock %}
